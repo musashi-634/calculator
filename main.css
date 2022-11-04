@@ -6,19 +6,22 @@ body {
   background-color: black;
   color: white;
   text-align: right;
-  width: 200px;
+  font-size: 30px;
+  width: 400px;
 }
 
 .button-row {
-  width: 200px;
+  width: 400px;
   display: flex;
   justify-content: space-between;
 }
 
 .button {
+  font-size: 30px;
   width: 25%;
 }
 
 .big-button {
+  font-size: 30px;
   width: 50%;
 }
