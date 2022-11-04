@@ -44,7 +44,7 @@ $(document).ready(function(){
   let memoriedNumbers = ["", ""];
   let memoriedOperator = {func: null, symbol: ""};
   
-  // 数字のボタンをクリックしたときの動作   小数点以下の0が入力できない！！！！！
+  // 数字のボタンをクリックしたときの動作
   $buttonNumber.click(function() {
     if (memoriedOperator.symbol === "=") {  // =を押した状態（演算子入力待ち）の場合
       return;
@@ -118,11 +118,10 @@ $(document).ready(function(){
     }
   });
   
-  // =ボタンを押したときの動作    <----------------今ここ編集中
+  // =ボタンを押したときの動作
   $buttonEqual.click(function() {
-    if (memoriedNumbers[1] !== "") { // 数値2に何か入力されている場合
-      if ((memoriedNumbers[1] === "0" || memoriedNumbers[1] === "0.")
-          && memoriedOperator.symbol === "/") { // 0除算の場合
+    if (memoriedNumbers[1] !== "" && memoriedNumbers[1].slice(-1) !== ".") { // 数値2に何か入力されており、かつ最後が小数点でない場合
+      if (Number(memoriedNumbers[1]) === 0 && memoriedOperator.symbol === "/") { // 0除算の場合
         $display.text("error");
         memoriedNumbers = ["", ""];
         memoriedOperator.func = null;
