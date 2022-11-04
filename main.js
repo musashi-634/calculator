@@ -46,80 +46,81 @@ $(document).ready(function(){
   
   // 数字のボタンをクリックしたときの動作
   $buttonNumber.click(function() {
-    if (memoriedOperator.symbol === "=") {  // =を押した状態（演算子入力待ち）の場合
-      return;
-    } else if (memoriedOperator.symbol === "") {  // 数値1の入力状態の場合
-      if (memoriedNumbers[0] === null) {  // 数値1が未入力の場合
-        memoriedNumbers[0] = String(Number($(this).text()));  // 00を0とするため
-        $display.text(memoriedNumbers[0]);
-      } else if (memoriedNumbers[0].includes(".")) {  // 数値1に小数点が含まれている場合
-        memoriedNumbers[0] += $(this).text();
-        $display.text(memoriedNumbers[0]);
-      } else {
-        memoriedNumbers[0] = String(Number(memoriedNumbers[0] + $(this).text())); // 0始まりとならないようにするため
-        $display.text(memoriedNumbers[0]);
-      }
-    } else {  // 数値2の入力状態の場合
-      if (memoriedNumbers[1] === "") {  // 数値2が未入力の場合
-        memoriedNumbers[1] = String(Number($(this).text()));  // 00を0とするため
-        $display.text(memoriedNumbers[0] + memoriedOperator.symbol + memoriedNumbers[1]);
-      } else if (memoriedNumbers[1].includes(".")) {  // 数値2に小数点が含まれている場合
-        memoriedNumbers[1] += $(this).text();
-        $display.text(memoriedNumbers[0] + memoriedOperator.symbol + memoriedNumbers[1]);
-      } else {
-        memoriedNumbers[1] = String(Number(memoriedNumbers[1] + $(this).text())); // 0始まりとならないようにするため
-        $display.text(memoriedNumbers[0] + memoriedOperator.symbol + memoriedNumbers[1]);
-      }
+    switch (memoriedOperator.symbol) {
+      case "=":  // =を押した状態（演算子入力待ち）の場合
+        break;
+      case "":  // 数値1の入力状態の場合
+        if (memoriedNumbers[0].includes(".")) {  // 数値1に小数点が含まれている場合
+          memoriedNumbers[0] += $(this).text();
+          $display.text(memoriedNumbers[0]);
+        } else {
+          memoriedNumbers[0] = String(Number(memoriedNumbers[0] + $(this).text())); // 0始まりとならないようにするため
+          $display.text(memoriedNumbers[0]);
+        }
+        break;
+      default:  // 数値2の入力状態の場合
+        if (memoriedNumbers[1].includes(".")) {  // 数値2に小数点が含まれている場合
+          memoriedNumbers[1] += $(this).text();
+          $display.text(memoriedNumbers[0] + memoriedOperator.symbol + memoriedNumbers[1]);
+        } else {
+          memoriedNumbers[1] = String(Number(memoriedNumbers[1] + $(this).text())); // 0始まりとならないようにするため
+          $display.text(memoriedNumbers[0] + memoriedOperator.symbol + memoriedNumbers[1]);
+        }
     }
   });
   
   // 小数点のボタンをクリックしたときの動作
   $buttonDecimalPoint.click(function() {
-    if (memoriedOperator.symbol === "=") {  // =を押した状態（演算子入力待ち）の場合
-      return;
-    } else if (memoriedOperator.symbol === "") {  // 数値1の入力状態の場合
-      if (memoriedNumbers[0] === "") {  // 数値1が未入力の場合
-        memoriedNumbers[0] = "0.";
-        $display.text(memoriedNumbers[0]);
-      } else if (memoriedNumbers[0].includes(".")) {  // 数値1に小数点が含まれている場合
-        return;
-      } else {
-        memoriedNumbers[0] += $(this).text();
-        $display.text(memoriedNumbers[0]);
-      }
-    } else {  // 数値2の入力状態の場合
-      if (memoriedNumbers[1] === "") {  // 数値2が未入力の場合
-        memoriedNumbers[1] = "0.";
-        $display.text(memoriedNumbers[0] + memoriedOperator.symbol + memoriedNumbers[1]);
-      } else if (memoriedNumbers[1].includes(".")) {  // 数値2に小数点が含まれている場合
-        return;
-      } else {
-        memoriedNumbers[1] += $(this).text();
-        $display.text(memoriedNumbers[0] + memoriedOperator.symbol + memoriedNumbers[1]);
-      }
+    switch (memoriedOperator.symbol) {
+      case "=":  // =を押した状態（演算子入力待ち）の場合
+        break;
+      case "":  // 数値1の入力状態の場合
+        if (memoriedNumbers[0] === "") {  // 数値1が未入力の場合
+          memoriedNumbers[0] = "0.";
+          $display.text(memoriedNumbers[0]);
+        } else if (memoriedNumbers[0].includes(".")) {  // 数値1に小数点が含まれている場合
+          return;
+        } else {
+          memoriedNumbers[0] += $(this).text();
+          $display.text(memoriedNumbers[0]);
+        }
+        break;
+      default:  // 数値2の入力状態の場合
+        if (memoriedNumbers[1] === "") {  // 数値2が未入力の場合
+          memoriedNumbers[1] = "0.";
+          $display.text(memoriedNumbers[0] + memoriedOperator.symbol + memoriedNumbers[1]);
+        } else if (memoriedNumbers[1].includes(".")) {  // 数値2に小数点が含まれている場合
+          return;
+        } else {
+          memoriedNumbers[1] += $(this).text();
+          $display.text(memoriedNumbers[0] + memoriedOperator.symbol + memoriedNumbers[1]);
+        }
     }
   });
   
   // 四則演算の演算子をクリックしたときの動作
   $buttonOperator.click(function() {
-    if (memoriedNumbers[0] === "") {  // 数値1に何も入力されていない場合
-      return;
-    } else if (memoriedNumbers[0].slice(-1) === ".") {  // 数値1の最後が小数点の場合
-      return;
-    } else if (memoriedNumbers[1] !== "") { // 数値2に何か入力されている状態
+    if (memoriedNumbers[0] === "" // 数値1に何も入力されていない場合
+        || memoriedNumbers[0].slice(-1) === "." // または数値1の最後が小数点の場合
+        || memoriedNumbers[1] !== "") {  // または数値2に何か入力されている場合
       return;
     } else {
       const symbol = $(this).text();
       $display.text(memoriedNumbers[0] + symbol);
       memoriedOperator.symbol = symbol;
-      if (symbol === "+") {
-        memoriedOperator.func = addNumbers;
-      } else if (symbol === "-") {
-        memoriedOperator.func = subtractNumbers;
-      } else if (symbol === "*") {
-        memoriedOperator.func = multiplyNumbers;
-      } else if (symbol === "/") {
-        memoriedOperator.func = divideNumbers;
+      switch (symbol) {
+        case "+":
+          memoriedOperator.func = addNumbers;
+          break;
+        case "-":
+          memoriedOperator.func = subtractNumbers;
+          break;
+        case "*":
+          memoriedOperator.func = multiplyNumbers;
+          break;
+        case "/":
+          memoriedOperator.func = divideNumbers;
+          break;
       }
     }
   });
@@ -133,7 +134,8 @@ $(document).ready(function(){
         memoriedOperator.func = null;
         memoriedOperator.symbol = "";
       } else {
-        memoriedNumbers = showCalculatedResult(memoriedNumbers, memoriedOperator.func, $display);
+        memoriedNumbers = showCalculatedResult(
+                            memoriedNumbers, memoriedOperator.func, $display);
         memoriedOperator.func = null;
         memoriedOperator.symbol = "=";
       }
