@@ -102,7 +102,13 @@ $(document).ready(function(){
   
   // 四則演算の演算子をクリックしたときの動作
   $buttonOperator.click(function() {
-    if (memoriedNumbers[0].slice(-1) !== ".") {  // 数値1の最後が小数点でない場合
+    if (memoriedNumbers[0] === "") {  // 数値1に何も入力されていない場合
+      return;
+    } else if (memoriedNumbers[0].slice(-1) === ".") {  // 数値1の最後が小数点の場合
+      return;
+    } else if (memoriedNumbers[1] !== "") { // 数値2に何か入力されている状態
+      return;
+    } else {
       const symbol = $(this).text();
       $display.text(memoriedNumbers[0] + symbol);
       memoriedOperator.symbol = symbol;
