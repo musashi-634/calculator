@@ -3,6 +3,22 @@
 
 $(document).ready(function(){
   
+  // 入力された数字をメモリとディスプレイに加える関数
+  function addInputNumber(displayedNumbersString, inputNumberPosition,
+                          inputNumberString, displayedSymbol, $display) {
+    if (displayedNumbersString[inputNumberPosition].includes(".")) {  // 数値2に小数点が含まれている場合
+      displayedNumbersString[inputNumberPosition] += inputNumberString;
+      $display.text(displayedNumbersString[0]
+                    + displayedSymbol + displayedNumbersString[1]);
+    } else {
+      displayedNumbersString[inputNumberPosition] = String(Number(
+        displayedNumbersString[inputNumberPosition] + inputNumberString)); // 0始まりとならないようにするため
+      $display.text(displayedNumbersString[0]
+                    + displayedSymbol + displayedNumbersString[1]);
+    }
+    return displayedNumbersString[inputNumberPosition];
+  }
+  
   // 加算
   function addNumbers(num1, num2) {
     return num1 + num2;
@@ -31,6 +47,13 @@ $(document).ready(function(){
     return [calculatedResultString, ""];
   }
   
+  // メモリをリセットする関数
+  function clearMemory() {
+    const numbers = ["", ""];
+    const operatorDictionary = {func: null, symbol: ""};
+    return [numbers, operatorDictionary];
+  }
+  
   // --------------------------------------------------------------------------
   // main
   // --------------------------------------------------------------------------
@@ -50,22 +73,12 @@ $(document).ready(function(){
       case "=":  // =を押した状態（演算子入力待ち）の場合
         break;
       case "":  // 数値1の入力状態の場合
-        if (memoriedNumbers[0].includes(".")) {  // 数値1に小数点が含まれている場合
-          memoriedNumbers[0] += $(this).text();
-          $display.text(memoriedNumbers[0]);
-        } else {
-          memoriedNumbers[0] = String(Number(memoriedNumbers[0] + $(this).text())); // 0始まりとならないようにするため
-          $display.text(memoriedNumbers[0]);
-        }
+        memoriedNumbers[0] = addInputNumber(memoriedNumbers, 0, $(this).text(),
+                                            memoriedOperator.symbol, $display);
         break;
       default:  // 数値2の入力状態の場合
-        if (memoriedNumbers[1].includes(".")) {  // 数値2に小数点が含まれている場合
-          memoriedNumbers[1] += $(this).text();
-          $display.text(memoriedNumbers[0] + memoriedOperator.symbol + memoriedNumbers[1]);
-        } else {
-          memoriedNumbers[1] = String(Number(memoriedNumbers[1] + $(this).text())); // 0始まりとならないようにするため
-          $display.text(memoriedNumbers[0] + memoriedOperator.symbol + memoriedNumbers[1]);
-        }
+        memoriedNumbers[1] = addInputNumber(memoriedNumbers, 1, $(this).text(),
+                                            memoriedOperator.symbol, $display);
     }
   });
   
@@ -130,9 +143,7 @@ $(document).ready(function(){
     if (memoriedNumbers[1] !== "" && memoriedNumbers[1].slice(-1) !== ".") { // 数値2に何か入力されており、かつ最後が小数点でない場合
       if (Number(memoriedNumbers[1]) === 0 && memoriedOperator.symbol === "/") { // 0除算の場合
         $display.text("error");
-        memoriedNumbers = ["", ""];
-        memoriedOperator.func = null;
-        memoriedOperator.symbol = "";
+        [memoriedNumbers, memoriedOperator] = clearMemory();
       } else {
         memoriedNumbers = showCalculatedResult(
                             memoriedNumbers, memoriedOperator.func, $display);
@@ -145,8 +156,6 @@ $(document).ready(function(){
   // ACボタンを押したときの動作
   $buttonAllClear.click(function() {
     $display.text(0);
-    memoriedNumbers = ["", ""];
-    memoriedOperator.func = null;
-    memoriedOperator.symbol = "";
+    [memoriedNumbers, memoriedOperator] = clearMemory();
   });
 });
