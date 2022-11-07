@@ -6,7 +6,7 @@ $(document).ready(function(){
   // 入力された数字をメモリとディスプレイに加える関数
   function addInputNumber(displayedNumbersString, inputNumberPosition,
                           inputNumberString, displayedSymbol, $display) {
-    if (displayedNumbersString[inputNumberPosition].includes(".")) {  // 数値2に小数点が含まれている場合
+    if (displayedNumbersString[inputNumberPosition].includes(".")) {  // 数値に小数点が含まれている場合
       displayedNumbersString[inputNumberPosition] += inputNumberString;
       $display.text(displayedNumbersString[0]
                     + displayedSymbol + displayedNumbersString[1]);
